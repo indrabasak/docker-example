@@ -22,7 +22,7 @@ It will create the Spring Boot executable JAR,`docker-example-service-1.0.jar`, 
 folder.
 
 ### Run
-To the newly created Spring Boot JAR from the terminal:
+To run the newly created Spring Boot JAR from the terminal:
 ```
 java -jar docker-example-service-1.0.jar
 ```
