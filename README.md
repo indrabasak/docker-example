@@ -91,5 +91,82 @@ bash-3.2$ docker stop cheetos
 cheetos
 ```
 
+## Docker Maven Plugin Setup
+We are using [`Spotify's Docker Maven Plugin`](https://github.com/spotify/docker-maven-plugin). It's relativelt easy to
+setup in your Maven `pom.xml`. Complexity rises when you specify the plugin in the parent POM. Here are the changes to
+the parent `pom.xml`
+```
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.4.13</version>
+                <configuration>
+                    <skipDockerBuild>true</skipDockerBuild>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+```
+You are using the `skipDockerBuild` tag is set to `true` to skip the docker build when you run the docker build from the parent directory.
+
+Changes to the child `pom.xml` where Spring Boot JAR gets created:
+```
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <skipDockerBuild>false</skipDockerBuild>
+                    <imageName>${docker.image.name}</imageName>
+                    <dockerDirectory>${basedir}/src/main/docker</dockerDirectory>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+```
+Here the `skipDockerBuild` tag is set to `false` to override the parent flag.
+##### Configuration Tags
+* `imageName` specifies the name of our example Docker image, e.g, `docker-example`
+* `dockerDirectory` specifies the location of the `Dockerfile`. The contents of the dockerDirectory will be 
+copied into `${project.build.directory}/docker`. A [`Dockerfile`](https://docs.docker.com/engine/reference/builder/)
+specfies all the instructions to be read by Docker while building the image.
+* `include` specfies the resources to be included, which ion our case is `docker-example-service-1.0.jar`
+
+## DockerFile
+Here is the content of the example `Dockerfile`.
+```
+FROM frolvlad/alpine-oraclejdk8:slim
+VOLUME /tmp
+ADD docker-example-service-1.0.jar app.jar
+RUN sh -c 'touch /app.jar'
+EXPOSE 8080
+ENV JAVA_OPTS=""
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-Dapp.port=${app.port}", "-jar","/app.jar"]
+LABEL maintainer "Indra Basak"
+```
+
+#### Instruction
+* The `FROM` instruction sets the Base Image for subsequent instructions. FROM must be the first non-comment 
+instruction in the Dockerfile.
+* The `VOLUME` instruction creates a mount point with the specified name.
+* The `ADD` instruction copies from `<src>` and adds them to the filesystem of the image at the path `<dest>`.
+* The `RUN` instruction executes the command on top of the current image.
+* The `EXPOSE` instruction informs Docker that the container listens on the specified network ports at runtime.
+* The `ENV` instruction sets the environment variable
+* The `ENTRYPOINT` allows you to configure a container that will run as an executable.
+* The  `LABEL` instruction adds metadata to an image.
+
+You can find more about Docker instructions [`here`](https://docs.docker.com/engine/reference/builder/#usage)
+
 [travis-badge]: https://travis-ci.org/indrabasak/docker-example.svg?branch=master
 [travis-badge-url]: https://travis-ci.org/indrabasak/docker-example/
