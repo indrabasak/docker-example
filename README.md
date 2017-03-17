@@ -9,7 +9,7 @@ application using [`Spotify's Docker Maven plugin`](https://github.com/spotify/d
 The project consist of two modules:
 
 1. `docker-example-model` - contains all the models used in the example
-2. `docker-spring-service` - example Spring Boot based microservice project
+2. `docker-spring-service` - contains Spring Boot example service and related classes
 
 ## Build and Run
 ### Maven Build
@@ -34,19 +34,19 @@ Execute the following maven command from the directory of the parent project, `d
 ```
 mvn clean package docker:build
 ```
-This should build a Docker image named `docker-example`
+This should build a Docker image named `docker-example`.
 
 ### Docker Run
-Run yor newly created Docker image, `docker-example`, by executing the 
+Run the newly created Docker image, `docker-example`, by executing the 
 [`docker run`](https://docs.docker.com/engine/reference/run/) command from the terminal:
 ```
 docker run --rm -p 8080:8080  --name=cheetos docker-example
 ```
 ##### Options
-* The `--rm` option automatically clean up the container and remove the file system when the container exit.
-* The `--name` option names the Docker container as `cheetos`. In absence of the `--name` option, the Docker generates a 
+* `--rm` option automatically clean up the container and remove the file system when the container exit.
+* `--name` option names the Docker container as `cheetos`. In absence of the `--name` option, the Docker generates a 
 random name for your container.
-* The [`-p 8080:8080`](https://docs.docker.com/engine/reference/run/#expose-incoming-ports) option publishes all 
+* [`-p 8080:8080`](https://docs.docker.com/engine/reference/run/#expose-incoming-ports) option publishes all 
 exposed ports to the host interfaces. In our example, it is port `8080` is both `hostPort` and `containerPort` 
 
 This should start up the example application and it can be accessed at `http://localhost:8080`
@@ -92,7 +92,7 @@ cheetos
 ```
 
 ## Docker Maven Plugin Setup
-We are using [`Spotify's Docker Maven Plugin`](https://github.com/spotify/docker-maven-plugin). It's relativelt easy to
+We are using [`Spotify's Docker Maven Plugin`](https://github.com/spotify/docker-maven-plugin). It's relatively easy to
 setup in your Maven `pom.xml`. Complexity rises when you specify the plugin in the parent POM. Here are the changes to
 the parent `pom.xml`
 ```
@@ -109,7 +109,7 @@ the parent `pom.xml`
         </plugins>
     </build>
 ```
-You are using the `skipDockerBuild` tag is set to `true` to skip the docker build when you run the docker build from the parent directory.
+The `skipDockerBuild` tag is set to `true` in order to skip the docker build in the parent pom.
 
 Changes to the child `pom.xml` where Spring Boot JAR gets created:
 ```
@@ -134,7 +134,8 @@ Changes to the child `pom.xml` where Spring Boot JAR gets created:
         </plugins>
     </build>
 ```
-Here the `skipDockerBuild` tag is set to `false` to override the parent flag.
+Here is the `skipDockerBuild` tag is set to `false` to override the parent flag.
+
 ##### Configuration Tags
 * `imageName` specifies the name of our example Docker image, e.g, `docker-example`
 * `dockerDirectory` specifies the location of the `Dockerfile`. The contents of the dockerDirectory will be 
@@ -156,17 +157,17 @@ LABEL maintainer "Indra Basak"
 ```
 
 #### Instruction
-* The `FROM` instruction sets the Base Image for subsequent instructions. FROM must be the first non-comment 
+* `FROM` instruction sets the Base Image for subsequent instructions. FROM must be the first non-comment 
 instruction in the Dockerfile.
-* The `VOLUME` instruction creates a mount point with the specified name.
-* The `ADD` instruction copies from `<src>` and adds them to the filesystem of the image at the path `<dest>`.
-* The `RUN` instruction executes the command on top of the current image.
-* The `EXPOSE` instruction informs Docker that the container listens on the specified network ports at runtime.
-* The `ENV` instruction sets the environment variable
-* The `ENTRYPOINT` allows you to configure a container that will run as an executable.
-* The  `LABEL` instruction adds metadata to an image.
+* `VOLUME` instruction creates a mount point with the specified name.
+* `ADD` instruction copies from `<src>` and adds them to the filesystem of the image at the path `<dest>`.
+* `RUN` instruction executes the command on top of the current image.
+* `EXPOSE` instruction informs Docker that the container listens on the specified network ports at runtime.
+* `ENV` instruction sets the environment variable
+* `ENTRYPOINT` allows you to configure a container that will run as an executable.
+* `LABEL` instruction adds metadata to an image.
 
-You can find more about Docker instructions [`here`](https://docs.docker.com/engine/reference/builder/#usage)
+You can find out more about Docker instructions [`here`](https://docs.docker.com/engine/reference/builder/#usage)
 
 [travis-badge]: https://travis-ci.org/indrabasak/docker-example.svg?branch=master
 [travis-badge-url]: https://travis-ci.org/indrabasak/docker-example/
