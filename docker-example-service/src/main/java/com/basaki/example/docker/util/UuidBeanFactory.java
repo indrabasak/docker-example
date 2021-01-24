@@ -19,8 +19,7 @@ public class UuidBeanFactory implements BeanFactory {
         }
 
         UUID uuidSrc = (UUID) source;
-        UUID uuidDest = new UUID(uuidSrc.getMostSignificantBits(),
+        return new UUID(uuidSrc.getMostSignificantBits(),
                 uuidSrc.getLeastSignificantBits());
-        return uuidDest;
     }
 }
