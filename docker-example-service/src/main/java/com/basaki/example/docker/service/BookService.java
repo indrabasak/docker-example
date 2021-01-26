@@ -4,6 +4,8 @@ import com.basaki.example.docker.error.InvalidSearchException;
 import com.basaki.example.docker.model.Book;
 import com.basaki.example.docker.model.BookRequest;
 import com.basaki.example.docker.model.Genre;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,34 +66,18 @@ public class BookService {
     public List<Book> get(String title, Genre genre, String publisher) {
 
         if (title == null && genre == null && publisher == null) {
-            return bookMap.values().stream().collect(Collectors.toList());
+            return new ArrayList<>(bookMap.values());
         }
 
-        List<Book> books = bookMap.values().stream().filter(b -> {
-            if (title != null && title.equalsIgnoreCase(b.getTitle())) {
-                return true;
-            } else {
-                return true;
-            }
-        }).filter(b -> {
-            if (genre != null && genre.equals(b.getGenre())) {
-                return true;
-            } else {
-                return true;
-            }
-        }).filter(b -> {
-            if (publisher != null && publisher.equalsIgnoreCase(
-                    b.getPublisher())) {
-                return true;
-            } else {
-                return true;
-            }
-        }).collect(Collectors.toList());
+        List<Book> books = bookMap.values().stream()
+                .filter(b -> title != null && title.equalsIgnoreCase(b.getTitle()))
+                .filter(b -> genre != null && genre.equals(b.getGenre()))
+                .filter(b -> publisher != null && publisher.equalsIgnoreCase(b.getPublisher()))
+                .collect(Collectors.toList());
 
-        if (books == null || books.size() == 0) {
+        if (books.isEmpty()) {
             throw new InvalidSearchException("No books found!");
         }
-
         return books;
     }
 

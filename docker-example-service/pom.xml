@@ -7,7 +7,6 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.basaki.example</groupId>
     <artifactId>docker-example-service</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
