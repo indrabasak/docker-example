@@ -5,7 +5,11 @@ import com.basaki.example.docker.model.Book;
 import com.basaki.example.docker.model.BookRequest;
 import com.basaki.example.docker.model.Genre;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.dozer.Mapper;
